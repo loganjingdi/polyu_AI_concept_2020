@@ -64,7 +64,7 @@ def evaluate(results, accuracy, f1):
 
     # Constants
     bar_width = 0.3
-    colors = ['#A00000','#00A0A0','#00A000']
+    colors = ['#A00000','#00A0A0','#00A000','#ADD8E6']  ##add one more color to fit 4 classifiers
     
     # Super loop to plot four panels of data
     for k, learner in enumerate(results.keys()):
@@ -81,7 +81,8 @@ def evaluate(results, accuracy, f1):
                     print("bar_width:" + str(bar_width))
                 ax[int(j/3), j%3].set_xticks([0.45, 1.45, 2.45])
                 ax[int(j/3), j%3].set_xticklabels(["1%", "10%", "100%"])
-                ax[int(j/3), j%3].set_xlabel("Training Set Size")
+                if j >= 3:   ############add one condition 2020/12/7
+                    ax[int(j/3), j%3].set_xlabel("Training Set Size")
                 ax[int(j/3), j%3].set_xlim((-0.1, 3.0))
     
     # Add unique y-labels
