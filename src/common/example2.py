@@ -12,11 +12,11 @@ import visuals as vs
 
 # Import sklearn.preprocessing.StandardScaler
 from sklearn.preprocessing import MinMaxScaler, LabelEncoder
-from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import fbeta_score,accuracy_score
 from sklearn.naive_bayes import GaussianNB
+from sklearn.neural_network import MLPClassifier
 from sklearn.tree import DecisionTreeClassifier
-from sklearn import tree
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 import pickle
@@ -204,29 +204,13 @@ def evaluate(dataset, key_field):
     print("Naive Predictor: [Accuracy score: {:.4f}, F-score: {:.4f}]".format(accuracy, fscore))
     # 2. end of building native predictor
 
-    # 2.5 predict
-    # 最基本的决策树模型生成
-    # dtc = RandomForestClassifier()  # 回归决策树同理
-    # dtc.fit(X_train, y_train)
-    #
-    #
-    # # sklearn的GridSearchCV选择决策树预剪枝最佳参数
-    # # 设定想要尝试效果的参数，多个参数用dict类型组合，参数名为key，参数值为list组合
-    # tree_param = {"min_samples_split": [2, 5, 6, 10], "min_samples_leaf": [1, 5, 6, 10], "n_estimators": [10, 50, 100],
-    #               "max_depth": [1, 5, 6, 10]}
-    # # GridSearchCV(“模型原型”, param_grid=“参数组合”, cv=n)
-    # g_s = GridSearchCV(RandomForestClassifier(), param_grid=tree_param, cv=5)
-    # g_s.fit(X_train, y_train)
-    # # 返回最佳参数和其对应的最佳评分
-    # g_s.best_params_, g_s.best_score_
-
 
     # 3. start of evaluation
     # TODO: Initialize the three models
-    clf_random_forest = RandomForestClassifier(max_depth=10, min_samples_leaf=1, min_samples_split=5, n_estimators=50)
-    clf_decision_tree = DecisionTreeClassifier(random_state=0, max_depth=10, min_samples_leaf=6, min_samples_split=10)
+    clf_random_forest = RandomForestClassifier()
+    clf_decision_tree = DecisionTreeClassifier()
     clf_C = SVC(kernel = 'rbf')
-
+    clf_M = MLPClassifier(solver='sgd',activation = 'identity',max_iter = 70,alpha = 1e-5,hidden_layer_sizes = (100,50),random_state = 1,verbose = False)
 
     # TODO: Calculate the number of samples for 1%, 10%, and 100% of the training data
     # HINT: samples_100 is the entire training set i.e. len(y_train)
@@ -238,16 +222,14 @@ def evaluate(dataset, key_field):
 
     # Collect results on the learners
     results = {}
-    for clf in [clf_random_forest, clf_decision_tree]:
+    for clf in [clf_random_forest, clf_decision_tree, clf_C, clf_M]:
         clf_name = clf.__class__.__name__
         results[clf_name] = {}
         for i, samples in enumerate([samples_1, samples_10, samples_100]):
             results[clf_name][i] = train_predict(clf, samples, X_train, y_train, X_test, y_test)
             if clf == clf_decision_tree:
-                storeTree(clf, "../decision_tree/decision_tree")
-                # 导出 titanic.dot 文件
-                with open("../decision_tree/tree.dot", 'w') as f:
-                    f = tree.export_graphviz(clf, out_file=f)
+                storeTree(clf, "decision_tree")
+
 
     # Run metrics visualization for the three supervised learning models chosen
     vs.evaluate(results, accuracy, fscore)

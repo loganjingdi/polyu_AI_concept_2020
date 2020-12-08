@@ -60,10 +60,10 @@ def evaluate(results, accuracy, f1):
     """
   
     # Create figure
-    fig, ax = pl.subplots(2, 3, figsize = (11,7))
+    fig, ax = pl.subplots(2, 3, figsize = (11,8))
 
     # Constants
-    bar_width = 0.3
+    bar_width = 0.22
     colors = ['#A00000','#00A0A0','#00A000','#ADD8E6']  ##add one more color to fit 4 classifiers
     
     # Super loop to plot four panels of data
