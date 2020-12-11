@@ -77,6 +77,7 @@ def train_predict(learner, sample_size, X_train, y_train, X_test, y_test):
 
     # TODO: Calculate the training time
     results['train_time'] = end - start
+    print('training time:' + str(results['train_time']) + ' second(s)')
 
     # TODO: Get the predictions on the test set(X_test),
     #       then get predictions on the first 300 training samples(X_train) using .predict()
@@ -87,22 +88,27 @@ def train_predict(learner, sample_size, X_train, y_train, X_test, y_test):
 
     # TODO: Calculate the total prediction time
     results['pred_time'] = end-start
+    print('testing time:' + str(results['pred_time']) + ' second(s)')
 
     # TODO: Compute accuracy on the first 300 training samples which is y_train[:300]
     results['acc_train'] = accuracy_score(predictions_train, y_train[:300])
+    print('training accuracy:' + str(results['acc_train']))
 
     # TODO: Compute accuracy on test set using accuracy_score()
     results['acc_test'] = accuracy_score(predictions_test, y_test)
+    print('testing accuracy:' + str(results['acc_test']))
 
     # TODO: Compute F-score on the the first 300 training samples using fbeta_score()
     results['f_train'] = fbeta_score(y_train[:300], predictions_train, beta= 0.5)
+    print('training f-score:' + str(results['f_train']))
 
     # TODO: Compute F-score on the test set which is y_test
     results['f_test'] = fbeta_score(y_test, predictions_test, beta= 0.5)
+    print('testing f-score:' + str(results['f_test']))
 
     # Success
     print("{} trained on {} samples.".format(learner.__class__.__name__, sample_size))
-
+    print("\n")
     # Return the results
     return results
 
@@ -207,8 +213,8 @@ def evaluate(dataset, key_field):
 
     # 3. start of evaluation
     # TODO: Initialize the three models
-    clf_random_forest = RandomForestClassifier()
-    clf_decision_tree = DecisionTreeClassifier()
+    clf_random_forest = RandomForestClassifier(max_depth=10, min_samples_leaf=1, min_samples_split=5, n_estimators=50)
+    clf_decision_tree = DecisionTreeClassifier(random_state=0, max_depth=10, min_samples_leaf=6, min_samples_split=10)
     clf_C = SVC(kernel = 'rbf')
     clf_M = MLPClassifier(solver='sgd',activation = 'identity',max_iter = 70,alpha = 1e-5,hidden_layer_sizes = (100,50),random_state = 1,verbose = False)
 
@@ -222,7 +228,7 @@ def evaluate(dataset, key_field):
 
     # Collect results on the learners
     results = {}
-    for clf in [clf_random_forest, clf_decision_tree, clf_C, clf_M]:
+    for clf in [clf_random_forest, clf_decision_tree]:
         clf_name = clf.__class__.__name__
         results[clf_name] = {}
         for i, samples in enumerate([samples_1, samples_10, samples_100]):
