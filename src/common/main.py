@@ -215,7 +215,7 @@ def evaluate(dataset, key_field):
     # TODO: Initialize the three models
     clf_random_forest = RandomForestClassifier(max_depth=10, min_samples_leaf=1, min_samples_split=5, n_estimators=50)
     clf_decision_tree = DecisionTreeClassifier(random_state=0, max_depth=10, min_samples_leaf=6, min_samples_split=10)
-    clf_C = SVC(kernel = 'rbf')
+    clf_C = SVC(kernel = 'rbf', C = 0.9, gamma = 0.9)
     clf_M = MLPClassifier(solver='sgd',activation = 'identity',max_iter = 70,alpha = 1e-5,hidden_layer_sizes = (100,50),random_state = 1,verbose = False)
 
     # TODO: Calculate the number of samples for 1%, 10%, and 100% of the training data
