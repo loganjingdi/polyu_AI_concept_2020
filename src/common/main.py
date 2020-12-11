@@ -228,7 +228,7 @@ def evaluate(dataset, key_field):
 
     # Collect results on the learners
     results = {}
-    for clf in [clf_random_forest, clf_decision_tree]:
+    for clf in [clf_random_forest, clf_decision_tree, clf_C, clf_M]:
         clf_name = clf.__class__.__name__
         results[clf_name] = {}
         for i, samples in enumerate([samples_1, samples_10, samples_100]):
